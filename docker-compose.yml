@@ -1,0 +1,46 @@
+services:
+  # 1. Flask Application
+  web:
+    build: .
+    container_name: flask_app
+    restart: always
+    ports:
+      - "5000:5000"
+    volumes:
+      - .:/app
+    environment:
+      - DATABASE_URL=postgresql://myuser:mypassword@dbpg:5432/mydatabase
+    depends_on:
+      - dbpg
+
+  # 2. PostgreSQL Database
+  dbpg:
+    image: postgres:15
+    container_name: postgres_db
+    restart: always
+    environment:
+      POSTGRES_USER: myuser
+      POSTGRES_PASSWORD: mypassword
+      POSTGRES_DB: mydatabase
+    volumes:
+      - ./pgdata:/var/lib/postgresql/data
+
+  # 3. pgAdmin
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin
+    ports:
+      - "8080:80"
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: adminpassword
+    depends_on:
+      - dbpg
+    volumes:
+      - ./pgadmin:/var/lib/pgadmin
+      
+
+volumes:
+  pgdata:
+  pgadmin:
