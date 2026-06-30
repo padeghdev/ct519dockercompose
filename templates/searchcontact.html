@@ -1,0 +1,85 @@
+{% extends "base.html" %} {% block namemenu %}
+<h1 class="m-0">Search Contact Notes</h1>
+{% endblock %} {% block content %}
+
+<script>
+  function gotopage(x) {
+    window.location.href = "/showcontactnotes/listcontactnotes/" + x;
+  }
+</script>
+
+<div class="card card-primary card-outline">
+  <div class="card-body">
+    <form action="/showcontactnotes" method="post">
+      <div class="mb-3">
+        <label for="exampleInputEmail1" class="form-label"
+          >Search Customer</label
+        >
+        <input
+          class="form-control"
+          style="width: 500px"
+          name="cusname"
+          placeholder="ใส่ชื่อลูกค้า"
+        />
+      </div>
+
+      <div class="mb-3">
+        <button style="width: 120px" class="btn btn-primary btn-sm">
+          Search
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Button trigger modal -->
+
+<!-- Modal -->
+
+<div class="card card-primary card-outline">
+  <div class="card-body">
+    <div class="mb-3">
+      <table
+        style="text-align: center; border: 1px solid #000"
+        class="table table-hover"
+      >
+        <thead>
+          <tr style="background-color: blue; color: #fff; height: 30px">
+            <th style="width: 80px; border: 1px solid #000">ID</th>
+            <th style="width: 300px; border: 1px solid #000">
+              ชื่อองค์กรลูกค้า
+            </th>
+            <th style="width: 300px; border: 1px solid #000">ที่อยู่</th>
+            <th style="width: 200px; border: 1px solid #000">เบอร์โทร</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for row in rows %}
+
+          <tr onclick="gotopage( '{{ row[0] }}' )" class="align-middle">
+            <td style="text-align: center; border: 1px solid #000">
+              {{ row[0] }}
+            </td>
+            <td style="text-align: left; border: 1px solid #000">
+              {{ row[1] }}
+            </td>
+            <td style="text-align: center; border: 1px solid #000">
+              {{ row[2] }}
+            </td>
+            <td style="text-align: center; border: 1px solid #000">
+              {{ row[3] }}
+            </td>
+          </tr>
+
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- Button trigger modal -->
+
+<!-- Modal -->
+
+{% endblock %}

@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+
+
+{% block namemenu %}
+<h1 class="m-0">Dashboard > AddNew</h1>
+{% endblock %} 
+
+
+
+{% block content %}
+
+ 
+<div class="card card-primary card-outline">
+ 
+ 
+
+<form  action = "/customers/insert"   method = "post"  >
+                    <!--begin::Body-->
+                    <div class="card-body">
+                      <div class="mb-3">
+
+                        <label for="exampleInputEmail1" class="form-label">Company Name</label>
+                        <input
+                          class="form-control"
+                          name="customername"   
+                          value = ""  />
+
+
+                       <label for="exampleInputEmail1" class="form-label">Tax ID</label>
+                        <input
+                          class="form-control"
+                          name="taxid"        
+                          value="" 
+                        />
+
+
+
+
+                       <label for="exampleInputEmail1" class="form-label">Address</label>
+                        <input
+                          class="form-control"
+                          name="address"        
+                          value="" 
+                        />
+
+
+
+                        
+
+                       <label for="exampleInputEmail1" class="form-label">Phone</label>
+                        <input
+                          class="form-control"
+                          name="phone"        
+                          value="" 
+                        />
+
+                      
+
+              
+
+                      </div>
+                 
+       
+                    <!--end::Body-->
+                    <!--begin::Footer-->
+                    <div class="card-footer">
+                      <button type="submit"  class="btn btn-primary">Submit</button>
+                    </div>
+            
+                           
+                    <!--end::Footer-->
+                </form>
+
+
+ 
+ 
+ 
+
+
+
+
+</div>
+
+
+
+
+{% endblock %}

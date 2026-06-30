@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+
+
+{% block namemenu %}
+<h1 class="m-0">Customers</h1>
+{% endblock %}
+
+
+
+{% block content %}
+<div class="card card-primary card-outline">
+  <div class="card-body">
+
+    <div class="mb-3">
+      <a href="/customers/addnewcustomer"  style="width: 120px;" class="btn btn-primary btn-sm">Add new</a>
+    </div>
+
+    <div class="mb-3">
+
+      <table style="text-align: center ; border:  1px solid #000 ; " class="table table-hover">
+
+
+
+        <tr style="background-color: blue ; color: #fff ; height: 30px;">
+          <th style="width: 80px; border:  1px solid #000 ;">ID</th>
+          <th style="width: 300px; border:  1px solid #000 ;">ชื่อองค์กรลูกค้า</th>
+          <th style="width: 100px; border:  1px solid #000 ;">เลขประจำตัวผู้เสียภาษี</th>
+          <th style="width: 300px; border:  1px solid #000 ;">ที่อยู่</th>
+          <th style="width: 200px; border:  1px solid #000 ;">เบอร์โทร</th>
+          <th style="width: 150px; border:  1px solid #000 ;">Action</th>
+        </tr>
+
+
+        {% for row in rows %}
+
+        <tr class="align-middle">
+          <td style="text-align: center ; border:  1px solid #000 ;">{{ row[0] }}</td>
+          <td style="text-align: left ; border:  1px solid #000 ;">{{ row[1] }}</td>
+          <td style="text-align: center ; border:  1px solid #000 ;">{{ row[2] }}</td>
+          <td style="text-align: left ; border:  1px solid #000 ;">{{ row[3] }}</td>
+          <td style="text-align: center ; border:  1px solid #000 ;">{{ row[4] }}</td>
+          <td class="align-middle" style="text-align: justify; border:  1px solid #000 ;" ">
+              <table>
+                <tr>
+                  <td style=" width: 150px; " ><a class=" btn-primary btn-sm" href="/customers/edit/{{ row[0]}}">
+            &nbsp;&nbsp;Edit&nbsp;&nbsp;</a></td>
+          <td style="width: 150px; "><a class="btn-danger btn-sm" href="/customers/delete/{{ row[0]}}">Delete</a></td>
+        
+ 
+        
+        </tr>
+      </table>
+      </td>
+      </tr>
+      {% endfor %}
+
+
+
+
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- Button trigger modal -->
+
+<!-- Modal -->
+
+
+
+{% endblock %}

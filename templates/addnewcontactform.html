@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+
+
+{% block namemenu %}
+<h1 class="m-0">Contact Notes</h1>
+{% endblock %}
+
+
+
+{% block content %}
+
+
+<div class="card card-primary card-outline">
+
+
+
+
+  <!-- Button trigger modal -->
+
+
+  <form action="/contactnotes/addnewcontact" method="post">
+    <!--begin::Body-->
+    <div class="card-body">
+      <div class="mb-3">
+        <label for="exampleInputEmail1" class="form-label">กรุณาเลือกรายชื่อลูกค้า</label>
+
+        <div class="dropdown" >
+
+          <select name="cid" style="margin: 10px 0px 20px 0px; width: 250px; height: 30px;;" class="form-select aria-label=" Default select example">
+            <option selected>Choose Customer...</option>
+            {% for row in rows %}
+            <option value="{{ row[0] }}">{{ row[1] }}</option>
+            {% endfor %}
+
+          </select>
+
+
+
+          <div class="form-floating">
+            <label for="floatingTextarea">บันทึกข้อความ</label>
+            <textarea class="form-control" placeholder="ใส่ข้อความการติดต่อ" style="height: 200px"
+              name="contactnotes"></textarea>
+
+          </div>
+
+
+        </div>
+
+      </div>
+
+
+      <!--end::Body-->
+      <!--begin::Footer-->
+      <div class="card-footer">
+        <button type="submit" style="width: 100px;" class="btn btn-primary">Save</button>
+      </div>
+
+
+      <!--end::Footer-->
+  </form>
+
+
+</div>
+
+
+
+
+{% endblock %}
