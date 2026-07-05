@@ -1,3 +1,5 @@
+version: '3.8'
+
 services:
   # 1. Flask Application
   web:
@@ -12,34 +14,53 @@ services:
       - DATABASE_URL=postgresql://myuser:mypassword@dbpg:5432/mydatabase
     depends_on:
       - dbpg
+    networks:
+      - web_network
+      - db_network
 
   # 2. PostgreSQL Database
   dbpg:
     image: postgres:15
-    container_name: postgres_db
+    container_name: postgresdb
     restart: always
+    ports:
+      - "5432:5432" # เปิดไว้กรณีต้องการต่อจากโปรแกรมในเครื่องตรงๆ (เช่น DBeaver) ถ้าไม่ใช้ปิดได้
     environment:
       POSTGRES_USER: myuser
       POSTGRES_PASSWORD: mypassword
       POSTGRES_DB: mydatabase
     volumes:
-      - ./pgdata:/var/lib/postgresql/data
+      - .pgdata:/var/lib/postgresql/data
+    networks:
+      - db_network
 
   # 3. pgAdmin
   pgadmin:
     image: dpage/pgadmin4
     container_name: pgadmin
-    ports:
-      - "8080:80"
     restart: always
+    ports:
+      - "5055:80"  # เข้าใช้งานผ่าน http://localhost:5055
     environment:
       PGADMIN_DEFAULT_EMAIL: admin@admin.com
       PGADMIN_DEFAULT_PASSWORD: adminpassword
     depends_on:
       - dbpg
     volumes:
-      - ./pgadmin:/var/lib/pgadmin
-      
+      - .pgadmin:/var/lib/pgadmin
+    networks:
+      - web_network  # เพื่อให้เราเข้าถึง pgAdmin จากหน้าเว็บนอกตู้ได้
+      - db_network   # เพื่อให้ pgAdmin คุยกับ dbpg ได้
+
+# -------------------------------------------------------------
+# กำหนดค่าระบบเครือข่าย (Networks) และพื้นที่เก็บข้อมูล (Volumes)
+# -------------------------------------------------------------
+networks:
+  web_network:
+    driver: bridge  # เครือข่ายภายนอกที่ให้ภายนอกเชื่อมเข้ามาหา Flask / pgAdmin ได้
+  db_network:
+    driver: bridge
+    internal: true  # ปลอดภัยสูง! เครือข่ายภายใน ห้ามอินเทอร์เน็ตภายนอกวิ่งเข้ามาหา DB โดยตรง
 
 volumes:
   pgdata:
