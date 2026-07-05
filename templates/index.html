@@ -1,0 +1,37 @@
+{% extends "base.html" %} {% block namemenu %}
+<h1 class="m-0">Customer</h1>
+{% endblock %} {% block content %}
+
+<div class="card card-primary card-outline">
+  <form action="http://localhost:5000/insert" method="post">
+    <!--begin::Body-->
+    <div class="card-body">
+      <div class="mb-3">
+        <label for="exampleInputEmail1" class="form-label">Compnay Name</label>
+        <input
+          class="form-control"
+          name="companyname"
+          value="{{ sinfo.companyname}}"
+        />
+
+        <label for="exampleInputEmail1" class="form-label"
+          >Contact person</label
+        >
+        <input
+          class="form-control"
+          name="contactname"
+          value="{{ sinfo.contactname }}"
+        />
+      </div>
+
+      <!--end::Body-->
+      <!--begin::Footer-->
+      <div class="card-footer">
+        <button type="submit" class="btn btn-primary">Submit</button>
+      </div>
+
+      <!--end::Footer-->
+    </div>
+  </form>
+</div>
+{% endblock %}

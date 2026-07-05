@@ -26,6 +26,8 @@ def selectdata():
         # ---------------------------------
         cursor.close()
         conn.close()
+
+        
     except Exception as e:
         print( "Query Operation Error")
 
