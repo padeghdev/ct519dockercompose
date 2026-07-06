@@ -61,7 +61,6 @@ networks:
   web_network:
     driver: bridge  # เครือข่ายภายนอกที่ให้ภายนอกเชื่อมเข้ามาหา Flask / pgAdmin ได้
   db_network:
-    driver: bridge
     internal: true  # ปลอดภัยสูง! เครือข่ายภายใน ห้ามอินเทอร์เน็ตภายนอกวิ่งเข้ามาหา DB โดยตรง
 
 volumes:
