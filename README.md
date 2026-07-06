@@ -22,7 +22,7 @@
 5. ใช้คำสั่ง docker compose up -d --build  ระบบจะทำการดึงโปรแกรม ต่างๆ ที่เกี่ยวข้อง เข้าสู่ระบบ
 6. ใช้คำสั่ง docker ps เพื่อตรวจสอบว่า มี container ถูกสรา้งขึ้นหรือไม่
 7. เปิด broswe tabที่ 1 :  สำหรับในส่วนของ pgadmin
-url: =>   http://<ip address เครื่องของท่าน>:8080
+url: =>   http://<ip address เครื่องของท่าน>:5055
 8. เปิด broswe tabที่ 2 :  สำหรับในส่วนของ web application
 url: =>   http://<ip address เครื่องของท่าน>:5000
 
