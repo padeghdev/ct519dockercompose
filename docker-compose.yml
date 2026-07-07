@@ -30,7 +30,7 @@ services:
       POSTGRES_PASSWORD: mypassword
       POSTGRES_DB: mydatabase
     volumes:
-      - pgdata:/var/lib/postgresql/data
+      - ./pgdata:/var/lib/postgresql/data
       - ./backup.sql:/docker-entrypoint-initdb.d/backup.sql
     networks:
       - db_network
@@ -49,7 +49,7 @@ services:
     depends_on:
       - dbpg
     volumes:
-      - pgadmin:/var/lib/pgadmin
+      - ./pgadmin:/var/lib/pgadmin
     networks:
       - web_network  # เพื่อให้เราเข้าถึง pgAdmin จากหน้าเว็บนอกตู้ได้
       - db_network   # เพื่อให้ pgAdmin คุยกับ dbpg ได้

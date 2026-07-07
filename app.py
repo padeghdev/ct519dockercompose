@@ -36,8 +36,8 @@ def insertcus():
         #cname = request.form.get('cname')
         #address = request.form.get('address')        
     print ("Hello")
-    cname =   "BBB"
-    address = "345  wireless rd 10100"
+    cname =   "CCC"
+    address = "7885  wireless rd 10100"
 
 
     # 2. คำสั่งสำหรับ PostgreSQL
