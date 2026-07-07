@@ -4,57 +4,47 @@ import psycopg2
 
 def createtable():
  
-    connection = None
-    cursor = None
+    conn  = None
+    cur  = None
     try:
-        # 1. Connect to your PostgreSQL database
-        connection = psycopg2.connect(
-            user="myuser",
-            password="mypassword",
-            host="localhost",
-            port="5432",
-            database="mydatabase"
-        )
-        
-        # 2. Create a cursor object
-        cursor = connection.cursor()
-        
-        # 3. Define the SQL Query for table creation
-        create_table_query = '''
+        conn = psycopg2.connect(
+                dbname="your_db_name",
+                user="your_username",
+                password="your_password",
+                host="localhost",
+                port="5432"
+            )
+            
+            # 2. สร้าง cursor
+        cur = conn.cursor()
 
-            CREATE TABLE IF NOT EXISTS customer (
-                cid SERIAL PRIMARY KEY,
-                customername VARCHAR(100) ,
-                taxid VARCHAR(13) ,
-                address VARCHAR(250) ,
-                phone VARCHAR(50) ,
-                status VARCHAR(1) ,
-                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-            );
-                '''
+        # 3. กำหนดคำสั่ง SQL
+        create_table_query = """
+        CREATE TABLE IF NOT EXISTS users (
+            id int PRIMARY KEY,
+            username varcharR(50) NOT NULL,
+            email VARCHAR(100) UNIQUE NOT NULL,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        );
+        """
 
-        
-        
-        # 4. Execute the SQL command
-        cursor.execute(create_table_query)
-        
-        # 5. Commit the transaction to save changes
-        connection.commit()
-        print("Table 'customer' created successfully!")
+        # 4. ทำการ execute คำสั่ง
+        cur.execute(create_table_query)
 
-    except (Exception, psycopg2.Error) as error:
-        print("Error while connecting to PostgreSQL or creating table:", error)
-        if connection:
-            # Rollback the transaction in case of an error
-            connection.rollback()
+        # 5. Commit เพื่อบันทึกการเปลี่ยนแปลง
+        conn.commit()
+        print("สร้างตารางเรียบร้อยแล้ว")
+
+    except Exception as e:
+        print(f"เกิดข้อผิดพลาด: {e}")
 
     finally:
-        # 6. Turn off communication with the database safely
-        if cursor:
-            cursor.close()
-        if connection:
-            connection.close()
- 
-    return "Table Created Successfully"
+        # 6. ปิดการเชื่อมต่อ
+        if cur:
+            cur.close()
+        if conn:
+            conn.close()
+    
+        return "end"
 
 # ************************************************************

@@ -14,14 +14,124 @@ app = Flask(__name__)
 
 # ************************************************************
 
-@app.route("/createtable")
-def createdata():
-    return createtable()
 
+@app.route("/createtable11")
+def createdata11():
+        return createtable()
 
 
 
 @app.route("/")
+def custom():
+        return "Hello"
+
+
+
+# ************************************************************
+@app.route("/insert"   )
+def insertcus():
+     
+    # 1. รับค่าจากฟอร์ม HTML
+
+        #cname = request.form.get('cname')
+        #address = request.form.get('address')        
+    print ("Hello")
+    cname =   "BBB"
+    address = "345  wireless rd 10100"
+
+
+    # 2. คำสั่งสำหรับ PostgreSQL
+    conn = dbconn()
+    cursor = conn.cursor()
+    
+    sql_query = "INSERT INTO custom  ( cname , address ) VALUES (%s , %s  ) ; "
+
+    # รันคำสั่ง SQL
+    cursor.execute(sql_query, (cname , address))
+    
+    conn.commit()  # บันทึกข้อมูล
+    cursor.close() # ปิด cursor
+    conn.close()   # ปิดการเชื่อมต่อ
+        
+        # 3. รีไดเรกต์กลับไปหน้าแรก (Root)
+    return "Table Created 11 Successfully"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+@app.route("/createtable")
+def createdata():
+    
+    conn  = None
+    cursor = None
+    
+    try:
+        # 1. Connect to your PostgreSQL database
+        conn = dbconn()
+        # 2. Create a cursor object
+        cursor = conn.cursor()
+        
+        # 3. Define the SQL Query for table creation
+ 
+
+        create_table_query = """
+        CREATE TABLE IF NOT EXISTS contact (
+            id int PRIMARY KEY,
+            username varcharR(50) NOT NULL,
+            email VARCHAR(100) UNIQUE NOT NULL,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        );
+        """
+
+        
+        
+        # 4. Execute the SQL command
+        cursor.execute(create_table_query)
+        
+        # 5. Commit the transaction to save changes
+        conn.commit()
+        print("Table 'customer' created successfully!")
+
+    except (Exception, psycopg2.Error) as error:
+        print("Error while connecting to PostgreSQL or creating table:", error)
+        if conn:
+            # Rollback the transaction in case of an error
+            conn.rollback()
+
+    finally:
+        # 6. Turn off communication with the database safely
+        if cursor:
+            cursor.close()
+        if conn:
+            conn.close()
+ 
+    return "Table Created 11 Successfully"
+
+ 
+
+
+
+
+@app.route("/xxxxxxxxxxx")
 def selectdata():
     customers = []
     try:
@@ -51,7 +161,7 @@ def addnewcustomer():
 
 # ************************************************************
 @app.route("/customers/insert" , methods=['GET', 'POST']  )
-def insertcustomery():
+def insertcustomer():
     if request.method == 'POST':
     # 1. รับค่าจากฟอร์ม HTML
 
