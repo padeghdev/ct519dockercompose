@@ -1,8 +1,11 @@
 from flask import Flask, render_template, request, redirect , url_for
-import psycopg2  # อย่าลืม import ไลบรารีนี้ครับ
+import psycopg2  
 from app.connectdb import dbconn
 
-from app.createtable import createtable
+from app.createtable_contact import createtable_contact
+from app.createtable_customer import createtable_customer
+from app.insertdata_customer import insertdata_customer
+from app.insertdata_contact import insertdata_contact
 
 
 from datetime import datetime
@@ -15,46 +18,53 @@ app = Flask(__name__)
 # ************************************************************
 
 
-@app.route("/createtable11")
-def createdata11():
-        return createtable()
+@app.route("/createtableschema")
+def createdataschema():
+
+    word = []
+    word.append('Start')
+
+    ####
+    try:
+        createtable_customer()
+        word.append ("Create Table Customer Success"  )  
+    except:
+        word.append ( "Table Customer  Failed")
+
+    ####
+    try:
+        createtable_contact()
+        word.append  ("Create Table Contact Success")
+    except:
+        word.append   ("Table Contact Failed")
+
+    ####
+    try:
+        insertdata_customer()
+        word.append ( "Insert Data Customer Success" )   
+    
+    except:
+        word.append ( "Table customer Failed")
+
+
+    ####
+    try:
+        insertdata_contact()
+        word.append ( "Insert Data Contact Success" ) 
+    except:
+        word.append ( "Insert Contact  Failed")
+
+    return render_template("back.html"  , show=word )
 
 
 
-@app.route("/")
+
+@app.route("/xxxx")
 def custom():
         return "Hello"
 
 
 
-# ************************************************************
-@app.route("/insert"   )
-def insertcus():
-     
-    # 1. รับค่าจากฟอร์ม HTML
-
-        #cname = request.form.get('cname')
-        #address = request.form.get('address')        
-    print ("Hello")
-    cname =   "CCC"
-    address = "7885  wireless rd 10100"
-
-
-    # 2. คำสั่งสำหรับ PostgreSQL
-    conn = dbconn()
-    cursor = conn.cursor()
-    
-    sql_query = "INSERT INTO custom  ( cname , address ) VALUES (%s , %s  ) ; "
-
-    # รันคำสั่ง SQL
-    cursor.execute(sql_query, (cname , address))
-    
-    conn.commit()  # บันทึกข้อมูล
-    cursor.close() # ปิด cursor
-    conn.close()   # ปิดการเชื่อมต่อ
-        
-        # 3. รีไดเรกต์กลับไปหน้าแรก (Root)
-    return "Table Created 11 Successfully"
 
 
 
@@ -78,60 +88,23 @@ def insertcus():
 
 
 
-@app.route("/createtable")
-def createdata():
-    
-    conn  = None
-    cursor = None
-    
-    try:
-        # 1. Connect to your PostgreSQL database
-        conn = dbconn()
-        # 2. Create a cursor object
-        cursor = conn.cursor()
-        
-        # 3. Define the SQL Query for table creation
- 
 
-        create_table_query = """
-        CREATE TABLE IF NOT EXISTS contact (
-            id int PRIMARY KEY,
-            username varcharR(50) NOT NULL,
-            email VARCHAR(100) UNIQUE NOT NULL,
-            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-        );
-        """
 
-        
-        
-        # 4. Execute the SQL command
-        cursor.execute(create_table_query)
-        
-        # 5. Commit the transaction to save changes
-        conn.commit()
-        print("Table 'customer' created successfully!")
 
-    except (Exception, psycopg2.Error) as error:
-        print("Error while connecting to PostgreSQL or creating table:", error)
-        if conn:
-            # Rollback the transaction in case of an error
-            conn.rollback()
 
-    finally:
-        # 6. Turn off communication with the database safely
-        if cursor:
-            cursor.close()
-        if conn:
-            conn.close()
- 
-    return "Table Created 11 Successfully"
+
+
+
+
+
+
+
 
  
 
 
 
-
-@app.route("/xxxxxxxxxxx")
+@app.route("/")
 def selectdata():
     customers = []
     try:
@@ -139,7 +112,7 @@ def selectdata():
         cursor = conn.cursor()
         cursor.execute("SELECT cid, customername, taxid, address , phone FROM customer  where status like '1'  order by cid asc;")
         customers  = cursor.fetchall()
-        # --- เพิ่มบรรทัดนี้เพื่อเช็คข้อมูล ---
+ 
         print("DEBUG: ข้อมูลที่ได้จาก DB คือ:", customers)
         # ---------------------------------
         cursor.close()
@@ -163,30 +136,28 @@ def addnewcustomer():
 @app.route("/customers/insert" , methods=['GET', 'POST']  )
 def insertcustomer():
     if request.method == 'POST':
-    # 1. รับค่าจากฟอร์ม HTML
+  
 
         customername = request.form.get('customername')
         taxid = request.form.get('taxid')
         address = request.form.get('address')        
         phone = request.form.get('phone')
-    
-        # 2. 🌟 คำสั่งสำหรับ PostgreSQL
+ 
         conn = dbconn()
         cursor = conn.cursor()
         
         sql_query = "INSERT INTO customer ( customername,taxid,address,phone,status) VALUES (%s, %s, %s, %s ,%s) ; "
-    
-        # รันคำสั่ง SQL
+ 
         cursor.execute(sql_query, (customername,taxid,address,phone,'1'))
         
-        conn.commit()  # บันทึกข้อมูล
-        cursor.close() # ปิด cursor
-        conn.close()   # ปิดการเชื่อมต่อ
+        conn.commit()   
+        cursor.close()  
+        conn.close()    
         
-        # 3. รีไดเรกต์กลับไปหน้าแรก (Root)
+ 
     return redirect('/')
 
-
+# ************************************************************
 
 
 
@@ -202,9 +173,9 @@ def listcompany():
         cursor = conn.cursor()
         cursor.execute("SELECT * FROM customer where status like '1'  ;")
         customers  = cursor.fetchall()
-        # --- เพิ่มบรรทัดนี้เพื่อเช็คข้อมูล ---
+ 
         print("DEBUG: ข้อมูลที่ได้จาก DB คือ:", customers)
-        # ---------------------------------
+   
         cursor.close()
         conn.close()
     except Exception as e:
@@ -214,6 +185,9 @@ def listcompany():
  
 # ************************************************************
 
+
+
+# ************************************************************
 @app.route("/customers/edit/<int:cid>")
 def editcompany( cid ):
 
@@ -235,13 +209,16 @@ def editcompany( cid ):
 
     return render_template("editcustomer.html"  , rows=customers)
 
+# ************************************************************
+
+
 
 # ************************************************************
 
 @app.route('/customers/update/<int:cid>', methods=['GET', 'POST']  )
 def updatecompany( cid ):
 
-    #cuid = request.form.get(cid)
+ 
     cusid = str(cid)
     customername = request.form.get('customername')
     taxid        = request.form.get('taxid')
@@ -254,7 +231,7 @@ def updatecompany( cid ):
             WHERE cid = %s
         """
         
-        # 3. รันคำสั่ง SQL บันทึกลงฐานข้อมูล
+ 
     conn = dbconn()
     cursor = conn.cursor()
 
@@ -268,6 +245,7 @@ def updatecompany( cid ):
  
 
 
+# ************************************************************
 @app.route("/customers/delete/<int:cid>")
 def deletecompany( cid ):
 
@@ -293,10 +271,14 @@ def deletecompany( cid ):
 
 # ************************************************************
 
+
+
+# ************************************************************
+
 @app.route('/customers/deleteconfirm/<int:cid>', methods=['GET', 'POST']  )
 def deletecuctomerconfirm( cid ):
 
-    #cuid = request.form.get(cid)
+ 
     cusid = str(cid)
  
     sql_query = """
@@ -305,7 +287,7 @@ def deletecuctomerconfirm( cid ):
             WHERE cid = %s
         """
         
-        # 3. รันคำสั่ง SQL บันทึกลงฐานข้อมูล
+ 
     conn = dbconn()
     cursor = conn.cursor()
     cursor.execute(sql_query, ( '0' , cusid))
@@ -317,6 +299,9 @@ def deletecuctomerconfirm( cid ):
 # ************************************************************
 
 
+
+# ************************************************************
+
 @app.route('/contactnotes')
 def addnewcontactform():    
     customers = []
@@ -325,7 +310,7 @@ def addnewcontactform():
         cursor = conn.cursor()
         cursor.execute("SELECT cid , customername  FROM customer where status like '1' order by customername asc ;")
         customers  = cursor.fetchall()
-        # --- เพิ่มบรรทัดนี้เพื่อเช็คข้อมูล ---
+ 
         print("DEBUG: ข้อมูลที่ได้จาก DB คือ:", customers)
         # ---------------------------------
         cursor.close()
@@ -339,11 +324,14 @@ def addnewcontactform():
 # ************************************************************
 
 
+
+# ************************************************************
+
 @app.route('/contactnotes/addnewcontact'  , methods=['GET', 'POST']  )
 def addnewcontact():    
 
     if request.method == 'POST':
-    # 1. รับค่าจากฟอร์ม HTML
+ 
         cid = request.form.get('cid')
         contactdetail = request.form.get('contactnotes')
 
@@ -352,21 +340,23 @@ def addnewcontact():
         do_time = dotimenow.strftime("%H:%M:%S")
 
         status = "1" 
-        # 2. 🌟 คำสั่งสำหรับ PostgreSQL
+ 
         conn = dbconn()
         cursor = conn.cursor()
         
         sql_query = "INSERT INTO contact ( contactdetail,cid,status , submitdate ,submittime) VALUES (%s, %s, %s, %s, %s) ; "
     
-        # รันคำสั่ง SQL
+ 
         cursor.execute(sql_query, ( contactdetail , cid , status , do_date, do_time ))
         
-        conn.commit()  # บันทึกข้อมูล
-        cursor.close() # ปิด cursor
-        conn.close()   # ปิดการเชื่อมต่อ
+        conn.commit()  
+        cursor.close()  
+        conn.close()    
         
-        # 3. รีไดเรกต์กลับไปหน้าแรก (Root)
+ 
     return redirect('/')
+
+# ************************************************************
 
 
 
@@ -397,6 +387,9 @@ def searchcontact():
 
     return render_template("searchcontact.html" , rows=customers  )
 
+# ************************************************************
+
+
 
 
 # ************************************************************
@@ -415,7 +408,7 @@ def listcontactnotes( cid ):
             WHERE status LIKE '1' and cid = %s ;
              
         """
-        #search_pattern = f"{cusid}"
+ 
         cursor.execute(sqlstr, ( cid ,))
         customers  = cursor.fetchall()
 
@@ -427,7 +420,7 @@ def listcontactnotes( cid ):
             WHERE status LIKE '1' and cid = %s ;
              
         """
-        #search_pattern = f"{cusid}"
+ 
         cursor.execute(notesqlstr, ( cid ,))
         noteslist  = cursor.fetchall()
 
@@ -441,13 +434,12 @@ def listcontactnotes( cid ):
     return render_template("showcontactnotes.html" ,   notes=noteslist ,  rows = customers )
 
 
-
+# ************************************************************
 
 
 
 
 # ************************************************************
 
-if __name__ == '__main__':
-    # เพิ่ม debug=True จะช่วยให้เห็น Log ได้ชัดขึ้น
+if __name__ == '__main__': 
     app.run(host='0.0.0.0', port=5000, debug=True)

@@ -25,4 +25,3 @@
 url: =>   http://<ip address เครื่องของท่าน>:5055
 8. เปิด broswe tabที่ 2 :  สำหรับในส่วนของ web application
 url: =>   http://<ip address เครื่องของท่าน>:5000
-
