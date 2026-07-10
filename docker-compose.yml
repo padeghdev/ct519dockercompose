@@ -5,7 +5,7 @@ services:
     container_name: flask_app
     restart: always
     ports:
-      - "80:5000"
+      - "8088:5000"
     volumes:
       - .:/app
     environment:
